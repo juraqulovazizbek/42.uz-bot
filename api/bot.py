@@ -1,0 +1,23 @@
+from django.conf import settings
+from telegram import Bot, Update, update
+from telegram.ext import CommandHandler, Dispatcher
+
+from .handlers import start
+
+
+bot = Bot(settings.TG_BOT_TOKEN)
+dispatcher = Dispatcher(bot, None, workers=4, use_context=True)
+
+
+
+
+dispatcher.add_handler(CommandHandler("start", start))
+
+
+
+def handle_update(data: dict):
+    update = Update.de_json(data, bot)
+    dispatcher.process_update(update)
+    
+def set_webhook(url: str):
+    bot.set_webhook(url)
